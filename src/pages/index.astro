@@ -41,7 +41,7 @@ const chat = [
   ["joão", "amei", "21:05", ""],
   ["ana", "então fecha?", "21:06", ""],
   ["pedro", "", "21:31", "audio"],
-  ["lucas", "quanto fica por pessoa?", "22:48", ""],
+  ["marina", "quanto fica por pessoa?", "22:48", ""],
   ["", "", "duas semanas depois", "day"],
   ["ana", "alguém reservou?", "19:02", ""],
   ["joão", "achei que você tinha reservado", "19:12", ""],
@@ -62,13 +62,13 @@ const foto = (n: string) => fotos[n.toLowerCase().replace(/[.,]/g, "").split(" "
 const inicial = (n: string) => n.trim().charAt(0).toUpperCase();
 
 /* Rede de pagamentos cruzados que o app colapsa */
-const nodes = ["Ana", "João", "Pedro", "Lucas", "Bia", "Rafa", "Duda", "Léo"];
+const nodes = ["Ana", "João", "Pedro", "Marina", "Bia", "Rafa", "Duda"];
 const pos = (i: number) => ({
-  x: +(160 + 120 * Math.cos((i / 8) * 6.2832 - 1.5708)).toFixed(1),
-  y: +(160 + 120 * Math.sin((i / 8) * 6.2832 - 1.5708)).toFixed(1),
+  x: +(160 + 120 * Math.cos((i / nodes.length) * 6.2832 - 1.5708)).toFixed(1),
+  y: +(160 + 120 * Math.sin((i / nodes.length) * 6.2832 - 1.5708)).toFixed(1),
 });
 const linhas: [number, number][] = [];
-for (let i = 0; i < 8; i++) for (let j = i + 1; j < 8; j++) if ((i + j) % 3 !== 0) linhas.push([i, j]);
+for (let i = 0; i < nodes.length; i++) for (let j = i + 1; j < nodes.length; j++) if ((i + j) % 3 !== 0) linhas.push([i, j]);
 
 const topicos = ["Hospedagem", "Passagens", "Roteiro", "Comida", "Orçamento"];
 const enquete: [string, number][] = [
@@ -82,7 +82,7 @@ const bagagem = [
   ["Carregador portátil", "Duda"],
   ["Capa de chuva", "Ana"],
   ["Remédio de enjoo", "Pedro"],
-  ["Documento do seguro", "Léo"],
+  ["Documento do seguro", "Marina"],
   ["Cartão internacional", "Bia"],
 ];
 
@@ -132,8 +132,8 @@ const depois = [
 
 const depoimentos = [
   ["A gente foi em oito pessoas pra Buenos Aires. No fim eu digitei “fechar contas” e o app disse exatamente quem devia o que. Levou um segundo. No ano anterior eu passei três semanas atrás de R$ 170.", "Marina R.", "34, São Paulo"],
-  ["O que me pegou foi a aula de inglês aparecer dentro do meu roteiro. Eu ia jantar em Lisboa e tinha uma aula de seis minutos ali, sobre pedir comida. Assisti no Uber.", "Rodrigo A.", "41, Belo Horizonte"],
-  ["Meu grupo nunca baixa nada. Esse eles baixaram, porque ninguém queria ficar de fora da divisão das contas.", "Juliana M.", "29, Curitiba"],
+  ["O que me pegou foi a aula de inglês aparecer dentro do meu roteiro. Eu ia jantar em Lisboa e tinha uma aula de seis minutos ali, sobre pedir comida. Assisti no Uber.", "João P.", "41, Belo Horizonte"],
+  ["Meu grupo nunca baixa nada. Esse eles baixaram, porque ninguém queria ficar de fora da divisão das contas.", "Duda R.", "29, Curitiba"],
 ];
 
 const faq = [
@@ -234,7 +234,7 @@ const cores: Record<string, string> = {
       <div class="zap" data-rv="right">
         <div class="zap-top">
           <span class="zap-av">VF</span>
-          <span><strong>Viagem Lisboa</strong><small>Ana, João, Pedro, Lucas, Bia, +3</small></span>
+          <span><strong>Viagem Lisboa</strong><small>Ana, João, Pedro, Marina, Bia, +3</small></span>
         </div>
         <div class="zap-body" data-stagger="240">
           {chat.map((m) =>
@@ -406,7 +406,7 @@ const cores: Record<string, string> = {
 
           <div class="settle-out">
             <div class="pay"><span class="route"><b><img class="mini" src="img/avatar-joao.png" alt="" width="28" height="28" loading="lazy" decoding="async" />João</b> paga pra <b><img class="mini" src="img/avatar-ana.png" alt="" width="28" height="28" loading="lazy" decoding="async" />Ana</b></span><span class="val num">R$ 240</span></div>
-            <div class="pay"><span class="route"><b><img class="mini" src="img/avatar-pedro.png" alt="" width="28" height="28" loading="lazy" decoding="async" />Pedro</b> paga pro <b><span class="mini mini-l">L</span>Lucas</b></span><span class="val num">R$ 85</span></div>
+            <div class="pay"><span class="route"><b><img class="mini" src="img/avatar-pedro.png" alt="" width="28" height="28" loading="lazy" decoding="async" />Pedro</b> paga pro <b><img class="mini" src="img/avatar-marina.png" alt="" width="28" height="28" loading="lazy" decoding="async" />Marina</b></span><span class="val num">R$ 85</span></div>
             <p class="quit">Está tudo quitado.</p>
           </div>
         </div>
@@ -1114,8 +1114,8 @@ const cores: Record<string, string> = {
     object-fit: cover; display: block;
     filter: saturate(0.78) contrast(1.04);
   }
-  .album img { width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(0.82); transition: transform 1s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.7s; }
-  .album figure:hover img { transform: scale(1.07); filter: saturate(1.15); }
+  .album figure > img { width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(0.82); transition: transform 1s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.7s; }
+  .album figure:hover > img { transform: scale(1.07); filter: saturate(1.15); }
   /* etiqueta do album, agora com peso */
   .album-tag {
     position: absolute; left: 50%; bottom: -26px; transform: translateX(-50%);
@@ -1145,8 +1145,8 @@ const cores: Record<string, string> = {
     opacity: 0; transform: translateY(10px);
     animation: porfloat 7s ease-in-out var(--d, 0s) infinite;
   }
-  .por-av {
-    width: 36px; height: 36px; border-radius: 50%; object-fit: cover; display: block; flex: none;
+  .album .por-av {
+    width: 30px; height: 30px; filter: none; transform: none; border-radius: 50%; object-fit: cover; display: block; flex: none;
     border: 2px solid var(--vf-cyan);
     box-shadow: 0 0 0 3px rgba(7, 10, 20, 0.9), 0 0 18px -4px var(--vf-cyan);
   }
