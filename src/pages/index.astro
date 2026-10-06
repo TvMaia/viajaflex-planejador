@@ -4,12 +4,12 @@ import Base from "../layouts/Base.astro";
 /* Placeholders identificados. Cada bloco mostra o nome do arquivo que vai entrar
    em /public/img/ quando as imagens geradas por IA chegarem. */
 const album = [
-  { f: "album-04.jpg", alt: "Paisagem passando pela janela do onibus, com o reflexo de uma passageira no vidro", por: "Ana", ini: "A" },
-  { f: "album-01.jpg", alt: "Grupo de amigos de costas numa mureta olhando a cidade ao entardecer", por: "João", ini: "J" },
-  { f: "album-02.jpg", alt: "Mesa de restaurante vista de cima no fim de uma refeicao em grupo", por: "Pedro", ini: "P" },
-  { f: "album-03.jpg", alt: "Pes de quatro pessoas em circulo na areia molhada da praia", por: "Bia", ini: "B" },
-  { f: "album-05.jpg", alt: "Praca historica lotada no fim de tarde, com bandeirinhas atravessando o ceu", por: "Marina", ini: "M" },
-  { f: "album-06.jpg", alt: "Mochila, passaporte e mapa dobrado sobre uma cama de hostel", por: "Rafa", ini: "R" },
+  { f: "album-04.jpg", alt: "Paisagem passando pela janela do onibus, com o reflexo de uma passageira no vidro", por: "Ana", av: "avatar-ana.png" },
+  { f: "album-01.jpg", alt: "Grupo de amigos de costas numa mureta olhando a cidade ao entardecer", por: "João", av: "avatar-joao.png" },
+  { f: "album-02.jpg", alt: "Mesa de restaurante vista de cima no fim de uma refeicao em grupo", por: "Pedro", av: "avatar-pedro.png" },
+  { f: "album-03.jpg", alt: "Pes de quatro pessoas em circulo na areia molhada da praia", por: "Bia", av: "avatar-bia.png" },
+  { f: "album-05.jpg", alt: "Praca historica lotada no fim de tarde, com bandeirinhas atravessando o ceu", por: "Marina", av: "avatar-marina.png" },
+  { f: "album-06.jpg", alt: "Mochila, passaporte e mapa dobrado sobre uma cama de hostel", por: "Rafa", av: "avatar-rafa.png" },
 ];
 
 /* Papeis do grupo — frente e verso do card que gira */
@@ -46,6 +46,20 @@ const chat = [
   ["ana", "alguém reservou?", "19:02", ""],
   ["joão", "achei que você tinha reservado", "19:12", ""],
 ];
+
+/* Fotos de perfil dos usuarios de exemplo */
+const fotos: Record<string, string> = {
+  ana: "avatar-ana.png",
+  "joão": "avatar-joao.png",
+  joao: "avatar-joao.png",
+  pedro: "avatar-pedro.png",
+  bia: "avatar-bia.png",
+  rafa: "avatar-rafa.png",
+  duda: "avatar-duda.png",
+  marina: "avatar-marina.png",
+};
+const foto = (n: string) => fotos[n.toLowerCase().replace(/[.,]/g, "").split(" ")[0]];
+const inicial = (n: string) => n.trim().charAt(0).toUpperCase();
 
 /* Rede de pagamentos cruzados que o app colapsa */
 const nodes = ["Ana", "João", "Pedro", "Lucas", "Bia", "Rafa", "Duda", "Léo"];
@@ -227,7 +241,13 @@ const cores: Record<string, string> = {
             m[3] === "day" ? (
               <div class="zap-day" data-rv>{m[2]}</div>
             ) : (
-              <div class={m[0] === "ana" ? "bub me" : "bub"} data-rv>
+              <div class={m[0] === "ana" ? "zap-l me" : "zap-l"} data-rv>
+                {foto(m[0]) ? (
+                  <img class="zap-f" src={`img/${foto(m[0])}`} alt="" width="30" height="30" loading="lazy" decoding="async" />
+                ) : (
+                  <span class="zap-f zap-f-l">{inicial(m[0])}</span>
+                )}
+              <div class="bub">
                 <b>{m[0]}</b>
                 {m[3] === "link" && <span class="zap-link">booking.com/hotel-lisboa-centro</span>}
                 {m[3] === "audio" ? (
@@ -236,6 +256,7 @@ const cores: Record<string, string> = {
                   <span>{m[1]}</span>
                 )}
                 <time>{m[2]}</time>
+              </div>
               </div>
             )
           )}
@@ -360,8 +381,22 @@ const cores: Record<string, string> = {
               </g>
               {nodes.map((n, i) => (
                 <g class="web-n">
-                  <circle cx={pos(i).x} cy={pos(i).y} r="21" />
-                  <text x={pos(i).x} y={pos(i).y + 4} text-anchor="middle">{n.slice(0, 3)}</text>
+                  <clipPath id={`np${i}`}><circle cx={pos(i).x} cy={pos(i).y} r="20" /></clipPath>
+                  <circle class="web-bg" cx={pos(i).x} cy={pos(i).y} r="20" />
+                  {foto(n) ? (
+                    <image
+                      href={`img/${foto(n)}`}
+                      x={pos(i).x - 20}
+                      y={pos(i).y - 20}
+                      width="40"
+                      height="40"
+                      clip-path={`url(#np${i})`}
+                      preserveAspectRatio="xMidYMid slice"
+                    />
+                  ) : (
+                    <text x={pos(i).x} y={pos(i).y + 4} text-anchor="middle">{n.slice(0, 3)}</text>
+                  )}
+                  <circle class="web-ring" cx={pos(i).x} cy={pos(i).y} r="20" />
                 </g>
               ))}
             </svg>
@@ -370,8 +405,8 @@ const cores: Record<string, string> = {
           <button class="settle-btn" type="button" id="settleBtn">Fechar as contas</button>
 
           <div class="settle-out">
-            <div class="pay"><span class="route"><b>João</b> paga pra <b>Ana</b></span><span class="val num">R$ 240</span></div>
-            <div class="pay"><span class="route"><b>Pedro</b> paga pro <b>Lucas</b></span><span class="val num">R$ 85</span></div>
+            <div class="pay"><span class="route"><b><img class="mini" src="img/avatar-joao.png" alt="" width="28" height="28" loading="lazy" decoding="async" />João</b> paga pra <b><img class="mini" src="img/avatar-ana.png" alt="" width="28" height="28" loading="lazy" decoding="async" />Ana</b></span><span class="val num">R$ 240</span></div>
+            <div class="pay"><span class="route"><b><img class="mini" src="img/avatar-pedro.png" alt="" width="28" height="28" loading="lazy" decoding="async" />Pedro</b> paga pro <b><span class="mini mini-l">L</span>Lucas</b></span><span class="val num">R$ 85</span></div>
             <p class="quit">Está tudo quitado.</p>
           </div>
         </div>
@@ -431,10 +466,10 @@ const cores: Record<string, string> = {
           <strong class="cofre-pc num"><span data-count="68">0</span>%</strong>
         </div>
         <div class="bars">
-          <div class="bar-row"><span>Ana</span><div class="bar"><i style="--p:92%"></i></div><b class="num">R$ 2.760</b></div>
-          <div class="bar-row"><span>Rafa</span><div class="bar"><i style="--p:81%"></i></div><b class="num">R$ 2.430</b></div>
-          <div class="bar-row"><span>Duda</span><div class="bar"><i style="--p:74%"></i></div><b class="num">R$ 2.220</b></div>
-          <div class="bar-row you"><span>Você</span><div class="bar"><i style="--p:41%"></i></div><b class="num">R$ 1.230</b></div>
+          <div class="bar-row"><span class="bar-p"><img src="img/avatar-ana.png" alt="" width="34" height="34" loading="lazy" decoding="async" />Ana</span><div class="bar"><i style="--p:92%"></i></div><b class="num">R$ 2.760</b></div>
+          <div class="bar-row"><span class="bar-p"><img src="img/avatar-rafa.png" alt="" width="34" height="34" loading="lazy" decoding="async" />Rafa</span><div class="bar"><i style="--p:81%"></i></div><b class="num">R$ 2.430</b></div>
+          <div class="bar-row"><span class="bar-p"><img src="img/avatar-duda.png" alt="" width="34" height="34" loading="lazy" decoding="async" />Duda</span><div class="bar"><i style="--p:74%"></i></div><b class="num">R$ 2.220</b></div>
+          <div class="bar-row you"><span class="bar-p"><i class="bar-eu">V</i>Você</span><div class="bar"><i style="--p:41%"></i></div><b class="num">R$ 1.230</b></div>
         </div>
       </div>
     </div>
@@ -504,7 +539,14 @@ const cores: Record<string, string> = {
               <li>
                 <span class="ck-box"><svg viewBox="0 0 24 24"><path d="M4 12.5l5.2 5.2L20 7" /></svg></span>
                 <span class="ck-t">{item}</span>
-                <span class="ck-w">{quem}</span>
+                <span class="ck-w">
+                  {foto(quem) ? (
+                    <img class="mini" src={`img/${foto(quem)}`} alt="" width="26" height="26" loading="lazy" decoding="async" />
+                  ) : (
+                    <span class="mini mini-l">{inicial(quem)}</span>
+                  )}
+                  {quem}
+                </span>
               </li>
             ))}
           </ul>
@@ -574,7 +616,7 @@ const cores: Record<string, string> = {
           <figure data-rv="zoom">
             <img src={`img/${it.f}`} alt={it.alt} loading="lazy" decoding="async" />
             <figcaption class="album-por" style={`--d:${(i * 0.9).toFixed(1)}s`}>
-              <span class="por-av">{it.ini}</span>
+              <img class="por-av" src={`img/${it.av}`} alt="" width="36" height="36" loading="lazy" decoding="async" />
               <span class="por-tx"><b>{it.por}</b> enviou</span>
             </figcaption>
           </figure>
@@ -691,7 +733,14 @@ const cores: Record<string, string> = {
           <figure class="card quote" data-rv>
             <span class="qm">”</span>
             <blockquote>{txt}</blockquote>
-            <figcaption><b>{nome}</b><span>{loc}</span></figcaption>
+            <figcaption>
+              {foto(nome) ? (
+                <img class="depo-f" src={`img/${foto(nome)}`} alt="" width="54" height="54" loading="lazy" decoding="async" />
+              ) : (
+                <span class="depo-f depo-f-l">{inicial(nome)}</span>
+              )}
+              <span class="depo-id"><b>{nome}</b><span>{loc}</span></span>
+            </figcaption>
           </figure>
         ))}
       </div>
@@ -825,6 +874,32 @@ const cores: Record<string, string> = {
   .zap-top strong { display: block; font-size: 0.94rem; font-weight: 500; }
   .zap-top small { color: var(--vf-faint); font-size: 0.74rem; }
   .zap-body { padding: 22px 20px 46px; display: flex; flex-direction: column; gap: 11px; }
+  .zap-l { display: flex; align-items: flex-end; gap: 9px; max-width: 86%; align-self: flex-start; }
+  .zap-l.me { align-self: flex-end; flex-direction: row-reverse; }
+  .zap-f {
+    width: 30px; height: 30px; border-radius: 50%; object-fit: cover; display: block; flex: none;
+    border: 1.5px solid rgba(240, 246, 255, 0.22);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.55);
+  }
+  .zap-f-l {
+    display: grid; place-items: center; font-family: var(--ff-mono); font-size: 0.72rem;
+    font-weight: 700; color: #06080F; background: linear-gradient(135deg, var(--vf-cyan), var(--vf-purple));
+  }
+  .zap-l .bub { align-self: auto; max-width: 100%; }
+  .zap-l.me .bub { background: #1B3A34; border-radius: 14px 14px 4px 14px; }
+  .zap-l.me .bub b { color: var(--vf-green); }
+  .mini {
+    width: 26px; height: 26px; border-radius: 50%; object-fit: cover; flex: none;
+    display: inline-block; vertical-align: -8px; margin-right: 7px;
+    border: 1.5px solid color-mix(in srgb, var(--tint) 50%, transparent);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.55);
+  }
+  .mini-l {
+    display: inline-grid; place-items: center; font-family: var(--ff-mono); font-size: 0.68rem;
+    font-weight: 700; font-style: normal; color: #06080F;
+    background: linear-gradient(135deg, var(--vf-cyan), var(--vf-purple));
+  }
+  .pay .mini { width: 28px; height: 28px; }
   .bub { align-self: flex-start; max-width: 80%; background: #182028; border-radius: 14px 14px 14px 4px; padding: 9px 13px 7px; font-size: 0.9rem; color: var(--vf-ink); }
   .bub.me { align-self: flex-end; background: #1B3A34; border-radius: 14px 14px 4px 14px; }
   .bub b { display: block; font-size: 0.68rem; font-weight: 600; color: var(--vf-cyan); margin-bottom: 3px; text-transform: capitalize; }
@@ -897,8 +972,10 @@ const cores: Record<string, string> = {
   .web svg { width: 100%; height: 100%; overflow: visible; }
   .web-lines line { stroke: var(--vf-red); stroke-width: 1; opacity: 0.5; transition: opacity 0.8s; }
   .settle.done .web-lines line { opacity: 0; }
-  .web-n circle { fill: var(--vf-elev); stroke: var(--vf-line-strong); stroke-width: 1; transition: stroke 0.7s, fill 0.7s; }
-  .settle.done .web-n circle { stroke: var(--vf-green); fill: rgba(52, 224, 140, 0.12); }
+  .web-n .web-bg { fill: var(--vf-elev); transition: fill 0.7s; }
+  .web-n .web-ring { fill: none; stroke: var(--vf-line-strong); stroke-width: 1.6; transition: stroke 0.7s, stroke-width 0.7s; }
+  .settle.done .web-n .web-bg { fill: rgba(52, 224, 140, 0.12); }
+  .settle.done .web-n .web-ring { stroke: var(--vf-green); stroke-width: 2.2; }
   .web-n text { fill: var(--vf-ink); font-family: var(--ff-mono); font-size: 10px; }
 
   .settle-btn {
@@ -937,8 +1014,20 @@ const cores: Record<string, string> = {
   .cofre-t .eyebrow { margin-bottom: 12px; }
   .cofre-t p { max-width: 58ch; font-size: 0.96rem; margin: 10px 0 0; }
   .cofre-pc { font-size: clamp(2.2rem, 4.2vw, 3.2rem); line-height: 1; color: var(--vf-green); flex: none; }
-  .bars { display: grid; gap: 13px; }
-  .bar-row { display: grid; grid-template-columns: 62px 1fr auto; gap: 16px; align-items: center; font-size: 0.88rem; color: var(--vf-muted); }
+  .bars { display: grid; gap: 18px; }
+  .bar-row { display: grid; grid-template-columns: 124px 1fr auto; gap: 16px; align-items: center; font-size: 0.92rem; color: var(--vf-muted); }
+  .bar-p { display: flex; align-items: center; gap: 11px; min-width: 0; }
+  .bar-p img, .bar-eu {
+    width: 34px; height: 34px; border-radius: 50%; flex: none; object-fit: cover; display: block;
+    border: 2px solid color-mix(in srgb, var(--tint) 46%, transparent);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6), 0 0 0 3px rgba(7, 10, 20, 0.9);
+  }
+  .bar-eu {
+    display: grid; place-items: center; font-family: var(--ff-mono); font-size: 0.8rem;
+    font-weight: 700; color: #06080F; background: linear-gradient(135deg, var(--vf-orange), var(--vf-yellow));
+    border-color: color-mix(in srgb, var(--vf-yellow) 55%, transparent); font-style: normal;
+  }
+  .bar-row.you .bar-p { color: var(--vf-ink); font-weight: 500; }
   .bar { height: 8px; border-radius: 999px; background: rgba(242, 247, 255, 0.07); overflow: hidden; }
   .bar i { display: block; height: 100%; width: var(--p); border-radius: inherit; background: var(--vf-grad); transform: scaleX(0); transform-origin: left; transition: transform 1.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
   .bar-row.in .bar i { transform: scaleX(1); }
@@ -989,7 +1078,8 @@ const cores: Record<string, string> = {
   .ck li.on .ck-box svg { stroke-dashoffset: 0; }
   .ck-t { flex: 1; transition: color 0.45s; }
   .ck li.on .ck-t { color: var(--vf-faint); text-decoration: line-through; }
-  .ck-w { font-family: var(--ff-mono); font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--tint); }
+  .ck-w { display: flex; align-items: center; gap: 0; font-family: var(--ff-mono); font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--tint); }
+  .ck-w .mini { vertical-align: middle; }
   .ck-foot { margin: 18px 0 0; font-size: 0.89rem; }
   .offline { grid-column: 1 / -1; background: rgba(10, 14, 29, 0.74); backdrop-filter: blur(10px); }
   .offline p { max-width: 70ch; }
@@ -1046,20 +1136,21 @@ const cores: Record<string, string> = {
   /* nome de quem enviou, flutuando sobre a foto */
   .album figure { position: relative; }
   .album-por {
-    position: absolute; left: 12px; bottom: 12px; z-index: 2;
-    display: flex; align-items: center; gap: 9px;
-    padding: 7px 14px 7px 7px; border-radius: 999px;
-    background: rgba(7, 10, 20, 0.72); border: 1px solid rgba(240, 246, 255, 0.16);
-    backdrop-filter: blur(12px);
+    position: absolute; left: 14px; bottom: 14px; z-index: 2;
+    display: flex; align-items: center; gap: 11px;
+    padding: 6px 18px 6px 6px; border-radius: 999px;
+    background: rgba(7, 10, 20, 0.78); border: 1px solid rgba(240, 246, 255, 0.2);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.9);
     opacity: 0; transform: translateY(10px);
     animation: porfloat 7s ease-in-out var(--d, 0s) infinite;
   }
   .por-av {
-    display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%;
-    background: var(--vf-grad); color: #06080F;
-    font-family: var(--ff-mono); font-size: 0.68rem; font-weight: 700;
+    width: 36px; height: 36px; border-radius: 50%; object-fit: cover; display: block; flex: none;
+    border: 2px solid var(--vf-cyan);
+    box-shadow: 0 0 0 3px rgba(7, 10, 20, 0.9), 0 0 18px -4px var(--vf-cyan);
   }
-  .por-tx { font-size: 0.78rem; color: var(--vf-muted); }
+  .por-tx { font-size: 0.88rem; color: var(--vf-muted); white-space: nowrap; }
   .por-tx b { color: var(--vf-ink); font-weight: 600; }
   @keyframes porfloat {
     0%, 6% { opacity: 0; transform: translateY(10px); }
@@ -1182,7 +1273,17 @@ const cores: Record<string, string> = {
   .quote { display: flex; flex-direction: column; gap: 26px; padding: 62px 34px 34px; }
   .qm { position: absolute; top: 22px; left: 32px; font-family: var(--ff-display); font-size: 5.4rem; line-height: 1; color: var(--tint); opacity: 0.34; }
   .quote blockquote { margin: 0; font-family: var(--ff-display); font-size: clamp(1.18rem, 1.45vw, 1.42rem); line-height: 1.52; color: var(--vf-ink); flex: 1; text-wrap: pretty; }
-  .quote figcaption { display: flex; flex-direction: column; gap: 5px; margin: 0; padding-top: 22px; border-top: 1px solid var(--vf-line); }
+  .quote figcaption { display: flex; align-items: center; gap: 15px; margin: 0; padding-top: 22px; border-top: 1px solid var(--vf-line); }
+  .depo-id { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .depo-f {
+    width: 54px; height: 54px; border-radius: 50%; object-fit: cover; display: block; flex: none;
+    border: 2px solid color-mix(in srgb, var(--tint) 55%, transparent);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.7), 0 0 22px -8px var(--tint);
+  }
+  .depo-f-l {
+    display: grid; place-items: center; font-family: var(--ff-mono); font-size: 1.22rem;
+    font-weight: 700; color: #06080F; background: linear-gradient(135deg, var(--tint), var(--tint-2, var(--vf-purple)));
+  }
   .quote figcaption b { font-family: var(--ff-display); font-size: 1.14rem; font-weight: 600; color: var(--vf-ink); letter-spacing: 0; text-transform: none; }
   .quote figcaption span { font-family: var(--ff-mono); font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--vf-muted); }
   .depo-note { text-align: center; font-family: var(--ff-mono); font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--vf-faint); margin-top: 42px; }
