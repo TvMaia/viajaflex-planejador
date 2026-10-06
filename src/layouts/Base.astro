@@ -1,0 +1,313 @@
+---
+import Logo from "../components/Logo.astro";
+import "../styles/global.css";
+
+const {
+  title = "ViajaFlex — Planejador de viagem em grupo grátis, com divisão de despesas",
+  description = "Monte o roteiro, divida as despesas sem briga, veja quanto custa por pessoa e aprenda o inglês do seu destino. Grátis, e todo o grupo entra junto.",
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta name="theme-color" content="#070A14" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..700;1,400..600&family=Outfit:wght@300;350;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    />
+  </head>
+  <body>
+    <div class="gate" role="alert">
+      <div class="gate-in">
+        <img class="gate-logo" src="logo-lockup.png" alt="ViajaFlex" width="190" height="129" />
+        <p class="gate-msg">
+          O Thiago não falou que a experiência do teste era pra ser pelo computador?
+          Vira homem e acalma o coração. Acessa o mesmo link pelo PC depois e me diz o que achou.
+        </p>
+        <p class="gate-url">viajaflex · planejador</p>
+      </div>
+    </div>
+
+    <div class="atmos"></div>
+    <div class="progress" aria-hidden="true"><i></i></div>
+
+    <header class="topbar">
+      <div class="wrap topbar-in">
+        <a href="#topo" class="brand" aria-label="ViajaFlex"><Logo size={24} /></a>
+        <nav class="links">
+          <a href="#despesas">Despesas</a>
+          <a href="#dinheiro">Orçamento</a>
+          <a href="#ingles">Inglês</a>
+          <a href="#faq">Dúvidas</a>
+        </nav>
+        <a href="#criar" class="btn btn-sm">Criar viagem grátis</a>
+      </div>
+    </header>
+
+    <main id="topo">
+      <slot />
+    </main>
+
+    <footer class="foot">
+      <div class="wrap foot-in">
+        <Logo size={58} variant="lockup" />
+        <p class="foot-note">
+          ViajaFlex · Planeje, divida, aprenda e viva mais.<br />
+          Planejador gratuito. Conteúdo de inglês para viagens é opcional e pago.
+        </p>
+      </div>
+    </footer>
+
+    <style>
+      /* ---- Porteira: no celular a pagina nao carrega, so o recado ---- */
+      .gate { display: none; }
+      @media (max-width: 900px), (pointer: coarse) and (max-width: 1100px) {
+        .gate {
+          display: grid;
+          position: fixed;
+          inset: 0;
+          z-index: 999;
+          place-items: center;
+          padding: 32px 26px;
+          background:
+            radial-gradient(120% 80% at 50% 0%, rgba(25, 218, 247, 0.16), transparent 62%),
+            radial-gradient(110% 70% at 50% 100%, rgba(255, 43, 194, 0.14), transparent 60%),
+            var(--vf-void);
+          text-align: center;
+        }
+        .gate-in { max-width: 23ch; display: grid; justify-items: center; gap: 26px; }
+        .gate-logo { width: 190px; height: auto; display: block; }
+        .gate-msg {
+          margin: 0;
+          font-family: var(--ff-display);
+          font-size: clamp(1.2rem, 5.4vw, 1.52rem);
+          font-weight: 500;
+          line-height: 1.38;
+          color: var(--vf-ink);
+          text-wrap: balance;
+        }
+        .gate-url {
+          margin: 0;
+          font-family: var(--ff-mono);
+          font-size: 0.62rem;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: var(--vf-faint);
+        }
+        body { overflow: hidden; }
+        .atmos, .progress, .topbar, main, .foot { display: none !important; }
+      }
+
+      .progress {
+        position: fixed;
+        inset: 0 0 auto 0;
+        height: 2px;
+        z-index: 60;
+        background: transparent;
+        pointer-events: none;
+      }
+      .progress i {
+        display: block;
+        height: 100%;
+        width: 100%;
+        transform: scaleX(0);
+        transform-origin: left;
+        background: var(--vf-grad);
+      }
+
+      .topbar {
+        position: fixed;
+        inset: 0 0 auto 0;
+        z-index: 50;
+        transition: background 0.5s, border-color 0.5s, backdrop-filter 0.5s;
+        border-bottom: 1px solid transparent;
+      }
+      .topbar.stuck {
+        backdrop-filter: blur(18px);
+        background: rgba(7, 10, 20, 0.82);
+        border-bottom-color: var(--vf-line);
+      }
+      .topbar-in {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        height: 72px;
+      }
+      .brand { text-decoration: none; }
+      .links { display: flex; gap: 32px; }
+      .links a {
+        position: relative;
+        font-family: var(--ff-mono);
+        font-size: 0.68rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--vf-muted);
+        text-decoration: none;
+        transition: color 0.3s;
+      }
+      .links a::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: -7px;
+        height: 1px;
+        background: var(--vf-grad);
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+      .links a:hover { color: var(--vf-ink); }
+      .links a:hover::after { transform: scaleX(1); transform-origin: left; }
+      .btn-sm { padding: 11px 20px; font-size: 0.84rem; }
+      @media (max-width: 900px) { .links { display: none; } }
+      @media (max-width: 520px) { .btn-sm { display: none; } }
+
+      .foot {
+        position: relative;
+        z-index: 1;
+        border-top: 1px solid var(--vf-line);
+        padding-block: 56px;
+        background: rgba(4, 6, 12, 0.7);
+      }
+      .foot-in {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 28px;
+        flex-wrap: wrap;
+      }
+      .foot-note {
+        margin: 0;
+        font-size: 0.82rem;
+        color: var(--vf-faint);
+        text-align: right;
+        line-height: 1.7;
+      }
+      @media (max-width: 680px) { .foot-note { text-align: left; } }
+    </style>
+
+    <script is:inline>
+      (function () {
+        var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+        /* ---- 1. Revelacao por scroll, com atraso em cascata ---- */
+        var io = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (e) {
+              if (e.isIntersecting) {
+                e.target.classList.add("in");
+                io.unobserve(e.target);
+              }
+            });
+          },
+          { rootMargin: "0px 0px -10% 0px", threshold: 0.12 }
+        );
+        document.querySelectorAll("[data-rv]").forEach(function (el) {
+          var d = el.getAttribute("data-delay");
+          if (d) el.style.transitionDelay = parseInt(d, 10) + "ms";
+          io.observe(el);
+        });
+
+        /* Cascata automatica: filhos de [data-stagger] herdam atraso crescente */
+        document.querySelectorAll("[data-stagger]").forEach(function (parent) {
+          var step = parseInt(parent.getAttribute("data-stagger"), 10) || 90;
+          Array.prototype.forEach.call(parent.children, function (child, i) {
+            if (child.hasAttribute("data-rv") && !child.hasAttribute("data-delay")) {
+              child.style.transitionDelay = i * step + "ms";
+            }
+          });
+        });
+
+        /* ---- 2. Barra de progresso de leitura ---- */
+        var bar = document.querySelector(".progress i");
+        var topbar = document.querySelector(".topbar");
+        var photos = [].slice.call(document.querySelectorAll(".photo-bg img.ph-bg"));
+        var ticking = false;
+
+        function onScroll() {
+          var y = window.scrollY;
+          var max = document.documentElement.scrollHeight - window.innerHeight;
+          if (bar) bar.style.transform = "scaleX(" + (max > 0 ? y / max : 0) + ")";
+          if (topbar) topbar.classList.toggle("stuck", y > 40);
+
+          /* ---- 3. Parallax dos fundos fotograficos ---- */
+          if (!reduce) {
+            photos.forEach(function (img) {
+              var r = img.parentElement.getBoundingClientRect();
+              if (r.bottom < -200 || r.top > window.innerHeight + 200) return;
+              var p = (r.top + r.height / 2 - window.innerHeight / 2) / window.innerHeight;
+              img.style.transform = "translate3d(0," + (p * -9).toFixed(2) + "%,0)";
+            });
+          }
+          ticking = false;
+        }
+        window.addEventListener(
+          "scroll",
+          function () {
+            if (!ticking) {
+              ticking = true;
+              requestAnimationFrame(onScroll);
+            }
+          },
+          { passive: true }
+        );
+        onScroll();
+
+        /* ---- 4. Brilho dos cards seguindo o cursor ---- */
+        if (!reduce && window.matchMedia("(hover: hover)").matches) {
+          document.querySelectorAll(".card").forEach(function (c) {
+            c.addEventListener("pointermove", function (ev) {
+              var r = c.getBoundingClientRect();
+              c.style.setProperty("--mx", ((ev.clientX - r.left) / r.width) * 100 + "%");
+              c.style.setProperty("--my", ((ev.clientY - r.top) / r.height) * 100 + "%");
+            });
+          });
+        }
+
+        /* ---- 5. Contadores que sobem quando entram na tela ---- */
+        var cio = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (e) {
+              if (!e.isIntersecting) return;
+              cio.unobserve(e.target);
+              var el = e.target;
+              var to = parseFloat(el.getAttribute("data-count"));
+              var dec = parseInt(el.getAttribute("data-dec") || "0", 10);
+              var pre = el.getAttribute("data-pre") || "";
+              var pos = el.getAttribute("data-pos") || "";
+              var dur = 1500;
+              var t0 = performance.now();
+              function fmt(n) {
+                return pre + n.toLocaleString("pt-BR", { minimumFractionDigits: dec, maximumFractionDigits: dec }) + pos;
+              }
+              if (reduce) { el.textContent = fmt(to); return; }
+              (function tick(now) {
+                var p = Math.min((now - t0) / dur, 1);
+                var e2 = 1 - Math.pow(1 - p, 3);
+                el.textContent = fmt(to * e2);
+                if (p < 1) requestAnimationFrame(tick);
+              })(t0);
+            });
+          },
+          { threshold: 0.6 }
+        );
+        document.querySelectorAll("[data-count]").forEach(function (el) {
+          cio.observe(el);
+        });
+      })();
+    </script>
+  </body>
+</html>

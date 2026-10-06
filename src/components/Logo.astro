@@ -1,0 +1,22 @@
+---
+/* Logo oficial do ViajaFlex, recortado de "logo sem fundo com nome.png".
+   variant="wordmark" -> lettering horizontal ViajaFlex (topbar)
+   variant="lockup"   -> monograma VF sobre o lettering (rodape)
+   size = altura em px. */
+const { size = 22, variant = "wordmark" } = Astro.props;
+const src = variant === "lockup" ? "logo-lockup.png" : "logo-wordmark.png";
+const ratio = variant === "lockup" ? 802 / 545 : 802 / 192;
+---
+
+<img
+  class="logo"
+  src={src}
+  alt="ViajaFlex"
+  width={Math.round(size * ratio)}
+  height={size}
+  style={`height:${size}px;width:auto`}
+/>
+
+<style>
+  .logo { display: block; object-fit: contain; }
+</style>

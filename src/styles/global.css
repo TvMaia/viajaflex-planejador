@@ -1,0 +1,283 @@
+/* ViajaFlex — sistema visual da landing page do Planejador
+   Direcao: editorial cinematografico com camadas de luz.
+   Serif de contraste medio (Playfair) para headline, sans geometrica para corpo,
+   e cada secao com sua propria temperatura de cor. */
+
+:root{
+  /* Base */
+  --vf-void:#070A14;
+  --vf-deep:#0A0E1D;
+  --vf-surface:#0D1220;
+  --vf-elev:#131A2A;
+
+  /* Texto */
+  --vf-ink:#F2F7FF;
+  --vf-muted:#9AA9C4;
+  --vf-faint:rgba(154,169,196,.6);
+
+  /* Acentos — saturados, tirados do logo oficial */
+  --vf-cyan:#19DAF7;
+  --vf-blue:#4C8DF6;
+  --vf-purple:#8B5CF6;
+  --vf-magenta:#FF2BC2;
+  --vf-green:#34E08C;
+  --vf-yellow:#F7D04B;
+  --vf-orange:#F79F45;
+  --vf-red:#F2495F;
+
+  --vf-grad:linear-gradient(100deg,var(--vf-cyan) 0%,var(--vf-blue) 32%,var(--vf-purple) 66%,var(--vf-magenta) 100%);
+  --vf-grad-soft:linear-gradient(100deg,rgba(25,218,247,.18),rgba(139,92,246,.18),rgba(255,43,194,.18));
+
+  /* Linhas */
+  --vf-line:rgba(242,247,255,.1);
+  --vf-line-strong:rgba(242,247,255,.2);
+
+  /* Tipografia */
+  --ff-display:"Playfair Display",ui-serif,Georgia,serif;
+  --ff-body:"Outfit",ui-sans-serif,system-ui,sans-serif;
+  --ff-mono:"JetBrains Mono",ui-monospace,monospace;
+
+  /* Ritmo */
+  --gutter:clamp(20px,5vw,72px);
+  --maxw:1240px;
+  --wide:1480px;
+  --section-y:clamp(96px,13vh,180px);
+
+  /* Tonalidade da secao — sobrescrita por cada <section> */
+  --tint:var(--vf-cyan);
+  --tint-2:var(--vf-purple);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+}
+
+body{
+  margin:0;
+  background:var(--vf-void);
+  color:var(--vf-ink);
+  font-family:var(--ff-body);
+  font-size:clamp(16px,1.05vw,17.5px);
+  line-height:1.65;
+  font-weight:350;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ---------- Atmosfera global: grao fixo ---------- */
+.atmos{position:fixed;inset:0;z-index:0;pointer-events:none}
+.atmos::after{
+  content:"";position:absolute;inset:0;opacity:.42;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.42'/%3E%3C/svg%3E");
+}
+
+/* ---------- Layout ---------- */
+.wrap{position:relative;z-index:2;width:100%;max-width:var(--maxw);margin-inline:auto;padding-inline:var(--gutter)}
+.wrap.w{max-width:var(--wide)}
+section{position:relative;z-index:1;padding-block:var(--section-y);isolation:isolate;overflow-x:clip}
+
+/* Aurora por secao — usa o --tint local, por isso cada secao tem cor propria */
+.aura::before{
+  content:"";position:absolute;inset:-10% -20%;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(44% 42% at 14% 12%,color-mix(in srgb,var(--tint) 20%,transparent),transparent 64%),
+    radial-gradient(40% 44% at 86% 78%,color-mix(in srgb,var(--tint-2) 18%,transparent),transparent 66%);
+  filter:blur(40px);
+}
+/* Linha divisoria que acende no centro */
+.rule{height:1px;border:0;margin:0;background:linear-gradient(90deg,transparent,var(--vf-line-strong) 20%,var(--vf-line-strong) 80%,transparent)}
+
+/* ---------- Tipografia ---------- */
+.eyebrow{
+  font-family:var(--ff-mono);font-size:.68rem;font-weight:500;
+  letter-spacing:.3em;text-transform:uppercase;color:var(--tint);
+  display:flex;align-items:center;gap:14px;margin:0 0 22px;
+}
+.eyebrow::before{content:"";width:34px;height:1px;background:currentColor;opacity:.65;flex:none}
+
+h1,h2,h3{font-family:var(--ff-display);font-weight:500;letter-spacing:-.015em;margin:0;text-wrap:balance}
+h1{font-size:clamp(2.5rem,5.8vw,4.6rem);line-height:1.04}
+h2{font-size:clamp(1.95rem,3.9vw,3.15rem);line-height:1.1;margin-bottom:24px}
+h3{font-size:clamp(1.1rem,1.6vw,1.32rem);line-height:1.28;font-weight:600;letter-spacing:-.005em}
+em{font-style:italic;font-weight:500}
+
+.lead{font-size:clamp(1.04rem,1.4vw,1.24rem);color:var(--vf-muted);max-width:58ch;line-height:1.68}
+p{margin:0 0 1.1em;color:var(--vf-muted)}
+p:last-child{margin-bottom:0}
+p strong,li strong{color:var(--vf-ink);font-weight:500}
+.hl{color:var(--vf-ink);font-weight:400}
+.grad-txt{background:var(--vf-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* Sublinhado que se desenha quando entra na tela */
+.ul-draw{position:relative;display:inline-block}
+.ul-draw::after{
+  content:"";position:absolute;left:0;right:0;bottom:-.04em;height:4px;border-radius:3px;
+  background:var(--vf-grad);transform:scaleX(0);transform-origin:left;
+  transition:transform 1.1s cubic-bezier(.2,.8,.2,1) .35s;
+}
+.in .ul-draw::after,.ul-draw.in::after{transform:scaleX(1)}
+
+/* Headline que revela palavra por palavra */
+.wsplit{display:inline-block;overflow:hidden;vertical-align:bottom}
+.wsplit > span{display:inline-block;transform:translateY(105%);transition:transform .9s cubic-bezier(.16,1,.3,1)}
+.in .wsplit > span{transform:none}
+
+/* ---------- Botoes ---------- */
+.btn{
+  display:inline-flex;align-items:center;gap:12px;
+  font-family:var(--ff-body);font-size:1rem;font-weight:500;letter-spacing:-.01em;
+  padding:17px 30px;border-radius:999px;border:0;cursor:pointer;text-decoration:none;
+  position:relative;isolation:isolate;color:#06080F;background:var(--vf-grad);
+  background-size:200% 100%;
+  transition:transform .4s cubic-bezier(.2,.8,.2,1),box-shadow .4s,background-position .7s;
+  box-shadow:0 12px 36px -14px rgba(25,218,247,.6);
+}
+.btn::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;z-index:-1;
+  background:var(--vf-grad);filter:blur(18px);opacity:0;transition:opacity .4s;
+}
+.btn:hover{transform:translateY(-3px);background-position:100% 0}
+.btn:hover::after{opacity:.65}
+.btn .arw{transition:transform .4s cubic-bezier(.2,.8,.2,1)}
+.btn:hover .arw{transform:translateX(6px)}
+.btn-ghost{background:transparent;color:var(--vf-ink);border:1px solid var(--vf-line-strong);box-shadow:none}
+.btn-ghost::after{display:none}
+.btn-ghost:hover{border-color:var(--tint);background:color-mix(in srgb,var(--tint) 8%,transparent)}
+.micro{font-family:var(--ff-mono);font-size:.74rem;letter-spacing:.03em;color:var(--vf-faint);margin:16px 0 0}
+
+/* ---------- Cards ---------- */
+.card{
+  position:relative;padding:30px;border-radius:20px;
+  background:linear-gradient(165deg,rgba(19,26,42,.92),rgba(10,14,29,.78));
+  border:1px solid var(--vf-line);
+  transition:transform .5s cubic-bezier(.2,.8,.2,1),border-color .5s,box-shadow .5s;
+}
+/* brilho que segue o cursor (--mx/--my vem do JS) */
+.card::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;opacity:0;pointer-events:none;
+  background:radial-gradient(300px circle at var(--mx,50%) var(--my,50%),color-mix(in srgb,var(--tint) 14%,transparent),transparent 70%);
+  transition:opacity .4s;
+}
+.card::before{
+  content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;opacity:0;
+  background:var(--vf-grad);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  transition:opacity .45s;pointer-events:none;
+}
+.card:hover{transform:translateY(-6px);box-shadow:0 30px 60px -30px rgba(0,0,0,.9)}
+.card:hover::before{opacity:.85}
+.card:hover::after{opacity:1}
+.card h3{margin-bottom:10px}
+.card p{margin:0;font-size:.95rem;line-height:1.62}
+.card .ico{
+  width:42px;height:42px;border-radius:12px;display:grid;place-items:center;margin-bottom:20px;
+  background:color-mix(in srgb,var(--tint) 12%,transparent);
+  border:1px solid color-mix(in srgb,var(--tint) 26%,transparent);
+  color:var(--tint);transition:transform .5s cubic-bezier(.2,.8,.2,1);
+}
+.card:hover .ico{transform:translateY(-2px) rotate(-5deg) scale(1.08)}
+.card .ico svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+
+.grid{display:grid;gap:18px}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:980px){.g3,.g4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:620px){.g2,.g3,.g4{grid-template-columns:1fr}}
+
+/* ---------- Card com flip 3D ---------- */
+.flip{perspective:1400px;background:none;border:0;padding:0;min-height:230px;cursor:default}
+.flip-in{
+  position:relative;width:100%;height:100%;min-height:230px;
+  transform-style:preserve-3d;transition:transform .75s cubic-bezier(.4,.1,.2,1);
+}
+.flip:hover .flip-in,.flip:focus-within .flip-in{transform:rotateY(180deg)}
+.flip-f,.flip-b{
+  position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  border-radius:20px;padding:28px;display:flex;flex-direction:column;justify-content:flex-end;
+  border:1px solid var(--vf-line);
+}
+.flip-f{background:linear-gradient(165deg,rgba(19,26,42,.92),rgba(10,14,29,.78))}
+.flip-b{
+  transform:rotateY(180deg);
+  background:linear-gradient(165deg,color-mix(in srgb,var(--tint) 16%,rgba(13,18,32,.95)),rgba(10,14,29,.92));
+  border-color:color-mix(in srgb,var(--tint) 34%,transparent);
+  justify-content:center;
+}
+.flip-b p{color:var(--vf-ink);font-size:.95rem;margin:0}
+.flip-hint{
+  position:absolute;top:22px;right:24px;font-family:var(--ff-mono);font-size:.6rem;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--vf-faint);
+}
+
+/* ---------- Revelacao por scroll ---------- */
+[data-rv]{opacity:0;transform:translateY(28px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1)}
+[data-rv].in{opacity:1;transform:none}
+[data-rv="zoom"]{transform:scale(.94)}
+[data-rv="zoom"].in{transform:none}
+[data-rv="left"]{transform:translateX(-36px)}
+[data-rv="right"]{transform:translateX(36px)}
+[data-rv="left"].in,[data-rv="right"].in{transform:none}
+
+/* ---------- Mockup de celular ---------- */
+.phone{
+  position:relative;width:100%;max-width:300px;aspect-ratio:9/19.5;border-radius:44px;
+  background:#04060C;border:1px solid rgba(242,247,255,.16);padding:9px;
+  box-shadow:0 70px 120px -45px rgba(0,0,0,.95),0 0 0 9px rgba(7,10,20,.92),
+             0 0 90px -24px color-mix(in srgb,var(--tint) 45%,transparent);
+}
+.phone::after{
+  content:"";position:absolute;top:19px;left:50%;transform:translateX(-50%);
+  width:86px;height:23px;border-radius:999px;background:#04060C;z-index:3;
+}
+.phone img{width:100%;height:100%;object-fit:cover;border-radius:36px;display:block}
+.phone-float{animation:bob 7s ease-in-out infinite}
+/* aura pulsante atras do celular da home */
+.hero-phone::before{
+  content:"";position:absolute;inset:4% -16% 10%;z-index:0;border-radius:50%;
+  background:radial-gradient(closest-side,color-mix(in srgb,var(--tint,var(--vf-cyan)) 38%,transparent),transparent 72%);
+  filter:blur(26px);opacity:.55;animation:aura 4.6s ease-in-out infinite;pointer-events:none;
+}
+@keyframes aura{0%,100%{opacity:.4}50%{opacity:.85}}
+@media (prefers-reduced-motion:reduce){.hero-phone::before{animation:none}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-16px)}}
+/* celular que endireita conforme entra na tela */
+.phone-tilt{transform:perspective(1600px) rotateY(-22deg) rotateX(6deg) scale(.95);transition:transform 1.4s cubic-bezier(.16,1,.3,1)}
+.phone-tilt.in{transform:perspective(1600px) rotateY(0) rotateX(0) scale(1)}
+
+/* ---------- Fundo fotografico de secao ---------- */
+.photo-bg{position:absolute;inset:0;z-index:-2;overflow:hidden}
+.photo-bg img{width:100%;height:118%;object-fit:cover;display:block;will-change:transform}
+.photo-bg::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,var(--vf-void) 0%,rgba(7,10,20,.72) 28%,rgba(7,10,20,.78) 72%,var(--vf-void) 100%);
+}
+
+/* ---------- Media de apoio ---------- */
+.shot{width:100%;border-radius:20px;border:1px solid var(--vf-line);display:block;box-shadow:0 44px 86px -48px rgba(0,0,0,.92)}
+figure{margin:0}
+figcaption{font-family:var(--ff-mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--vf-faint);margin-top:12px}
+
+/* ---------- Utilidades ---------- */
+.stack-sm>*+*{margin-top:12px}
+.center{text-align:center;margin-inline:auto}
+.center .eyebrow{justify-content:center}
+.center .lead{margin-inline:auto}
+.num{font-family:var(--ff-mono);font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.tag{
+  display:inline-flex;align-items:center;gap:8px;padding:8px 15px;border-radius:999px;
+  border:1px solid var(--vf-line);font-family:var(--ff-mono);font-size:.66rem;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--vf-muted);
+  transition:border-color .35s,color .35s,transform .35s;
+}
+.tag:hover{border-color:var(--tint);color:var(--vf-ink);transform:translateY(-2px)}
+
+@media(max-width:620px){
+  .eyebrow{letter-spacing:.18em;font-size:.6rem;flex-wrap:wrap}
+  .eyebrow::before{width:20px}
+  .micro{letter-spacing:.01em}
+}
