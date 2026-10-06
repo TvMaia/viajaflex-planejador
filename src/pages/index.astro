@@ -151,7 +151,7 @@ const cores: Record<string, string> = {
         <p class="eyebrow">Planejador de viagem em grupo</p>
         <h1>
           <span class="wsplit"><span>Sua viagem</span></span><br />
-          <span class="wsplit"><span>com os amigos</span></span><br />
+          <span class="wsplit"><span>com <span class="typed" aria-label="os amigos, a família, o crush, os primos, a galera"><span class="typed-tx">os amigos</span><i class="caret" aria-hidden="true"></i></span></span></span><br />
           <span class="wsplit"><span>não precisa morrer</span></span><br />
           <span class="wsplit"><span>no <em class="ul-draw">grupo do zap</em></span></span>
         </h1>
@@ -745,6 +745,20 @@ const cores: Record<string, string> = {
   .hero { padding-block: clamp(140px, 19vh, 215px) clamp(90px, 12vh, 150px); min-height: 100svh; display: flex; align-items: center; }
   .hero-in { display: grid; grid-template-columns: 1.08fr 0.92fr; gap: clamp(30px, 5vw, 70px); align-items: center; }
   .hero h1 { margin-bottom: 30px; }
+
+  /* palavra que se redigita sozinha na headline */
+  .typed { display: inline; white-space: nowrap; }
+  .typed-tx { font-style: italic; color: var(--vf-cyan); }
+  .caret {
+    display: inline-block; width: 3px; height: 0.78em; margin-left: 4px;
+    vertical-align: -0.06em; background: var(--vf-cyan); border-radius: 1px;
+    box-shadow: 0 0 14px var(--vf-cyan);
+    animation: blink 1s steps(1) infinite;
+  }
+  .typed.pausa .caret { animation: blink 1s steps(1) infinite; }
+  .typed.ativo .caret { animation: none; opacity: 1; }
+  @keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .caret { display: none; } }
   .hero-cta { margin-top: 36px; }
   .hero-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 40px; }
   .hero-phone { position: relative; display: flex; flex-direction: column; align-items: center; gap: 24px; }

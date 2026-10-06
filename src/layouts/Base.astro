@@ -277,7 +277,60 @@ const {
           });
         }
 
-        /* ---- 5. Contadores que sobem quando entram na tela ---- */
+        /* ---- 5. Palavra que se redigita na headline ---- */
+        (function () {
+          var alvo = document.querySelector(".typed");
+          if (!alvo) return;
+          var tx = alvo.querySelector(".typed-tx");
+          var frases = ["os amigos", "a família", "o crush", "os primos", "a galera"];
+          if (reduce) { tx.textContent = frases[0]; return; }
+
+          var i = 0;
+          var atual = frases[0];
+
+          function prefixoComum(a, b) {
+            var n = 0;
+            while (n < a.length && n < b.length && a[n] === b[n]) n++;
+            return n;
+          }
+
+          function escrever(destino, de, pronto) {
+            alvo.classList.add("ativo");
+            var n = de;
+            (function passo() {
+              n++;
+              tx.textContent = destino.slice(0, n);
+              if (n < destino.length) setTimeout(passo, 68 + Math.random() * 46);
+              else { alvo.classList.remove("ativo"); pronto(); }
+            })();
+          }
+
+          function apagar(ate, pronto) {
+            alvo.classList.add("ativo");
+            var n = tx.textContent.length;
+            (function passo() {
+              n--;
+              tx.textContent = atual.slice(0, n);
+              if (n > ate) setTimeout(passo, 38);
+              else { alvo.classList.remove("ativo"); pronto(); }
+            })();
+          }
+
+          function ciclo() {
+            var proxima = frases[(i + 1) % frases.length];
+            var corte = prefixoComum(atual, proxima);
+            apagar(corte, function () {
+              escrever(proxima, corte, function () {
+                atual = proxima;
+                i = (i + 1) % frases.length;
+                setTimeout(ciclo, 2000);
+              });
+            });
+          }
+          setTimeout(ciclo, 2600);
+        })();
+
+        /* ---- 6. Contadores que sobem quando entram na tela ---- */
         var cio = new IntersectionObserver(
           function (entries) {
             entries.forEach(function (e) {
